@@ -9,7 +9,21 @@ from django.conf import settings
 from django.core.management.base import BaseCommand
 from django.contrib.gis.geos import Point
 
-from ellis_act.apps.housing_map.models import Eviction
+from ellis_act.apps.housing_map.models import Eviction, Neighborhood
+
+
+def get_neighborhood(obj):
+    """Take Point object and return Neighborhood object or None"""
+    # get neighborhood
+    if obj:
+        try:
+            neighborhood = Neighborhood.objects.get(geom__contains=obj)
+        except Neighborhood.DoesNotExist:
+            neighborhood = None
+    else:
+        neighborhood = None
+
+    return neighborhood
 
 
 class Command(BaseCommand):
@@ -60,7 +74,15 @@ class Command(BaseCommand):
                     float(eviction_dict['latitude'])
                 )
 
+                neighborhood = get_neighborhood(point)
+
+                try:
+                    neighborhood_id = neighborhood.id
+                except AttributeError, e:
+                    neighborhood_id = None
+
                 model_data = {
+                    'neighborhood_id': neighborhood_id,
                     'eviction_id': eviction_dict['eviction_id'],
                     'address': eviction_dict['address'],
                     'city': eviction_dict['city'],
@@ -73,7 +95,7 @@ class Command(BaseCommand):
                     'constraints': eviction_dict['constraints'],
                     'constraints_date': eviction_dict['constraints_date'],
                     'supervisor_district': eviction_dict['supervisor_district'],
-                    'neighborhood': eviction_dict['neighborhood'],
+                    'raw_neighborhood': eviction_dict['neighborhood'],
                     'geom': point
                 }
 

@@ -20,5 +20,18 @@ $ fab bower:install   # fanric alias to run bower install
 $ fab rs  # start the server and Grunt tasks
 ```
 
+## data loading
+
+```
+$ python manage.py load_neighborhood
+$ python manage.py loaddataset
+```
+
 ## Data clean
 Went into Excel to make city column all read San Francisco. We're also loading the data with mostly CharFields since the data wasn't 100% clean.
+
+Went and did this is open refine
+
+had to convert data into utf-8 by uploading data to google sheets and downloading
+
+using planning commision shapefle for neighborhoods
