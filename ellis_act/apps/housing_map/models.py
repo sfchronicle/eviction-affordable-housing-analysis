@@ -1,38 +1,55 @@
 from django.contrib.gis.db import models
-from django.contrib.gis.geos import Point
 
-class BaseEviction(models.Model):
-    """Base Eviction Model class"""
-    eviction_id = models.CharField(max_length=255, blank=True, null=True)
+class Eviction(models.Model):
+    EVICTION_REASON_CHOICES = (
+        ('non_payment', 'non_payment'),
+        ('breach', 'breach'),
+        ('nuisance', 'nuisance'),
+        ('illegal_use', 'illegal_use'),
+        ('failure_to_sign_renewal', 'failure_to_sign_renewal'),
+        ('access_denial', 'access_denial'),
+        ('unapproved_subtenant', 'unapproved_subtenant'),
+        ('owner_move_in', 'owner_move_in'),
+        ('demolition', 'demolition'),
+        ('capital_improvement', 'capital_improvement'),
+        ('substantial_rehab', 'substantial_rehab'),
+        ('ellis_act_withdrawal', 'ellis_act_withdrawal'),
+        ('condo_conversion', 'condo_conversion'),
+        ('roommate_same_unit', 'roommate_same_unit'),
+        ('other_cause', 'other_cause'),
+        ('late_payments', 'late_payments'),
+        ('lead_remediation', 'lead_remediation'),
+        ('development', 'development'),
+    )
+
+    CONSTRAINTS_CHOICES = (
+        ('yes', 'yes'),
+        (0, 'zero'),
+        ('unknown', 'unknown')
+    )
+
+    eviction_id = models.CharField(max_length=255, null=True)
     address = models.CharField(max_length=255, blank=True, null=True)
     city = models.CharField(max_length=255, blank=True, null=True)
     state = models.CharField(max_length=255, blank=True, null=True)
-    zipcode = models.CharField(max_length=255, blank=True, null=True)
-    file_date = models.DateField(blank=True, null=True)
-    new_file_date = models.DateTimeField(blank=True, null=True)
-    year = models.CharField(max_length=4, blank=True, null=True)
-    client_location = models.CharField(max_length=255, blank=True, null=True)
-    latitude = models.CharField(max_length=255, blank=True, null=True)
-    longitude = models.CharField(max_length=255, blank=True, null=True)
+    zipcode = models.CharField(max_length=255, )  # zip
+    file_date = models.DateField()
+    new_date = models.CharField(max_length=255)
+    year = models.CharField(max_length=255)
+
+    eviction_reason = models.CharField(
+        max_length=255, choices=EVICTION_REASON_CHOICES)
+
+    constraints = models.CharField(
+        max_length=255, choices=CONSTRAINTS_CHOICES, default='unknown')
+
+    constraints_date = models.CharField(max_length=255, blank=True, null=True)
+    supervisor_district = models.CharField(max_length=2, blank=True, null=True)
+    neighborhood = models.CharField(max_length=255, blank=True, null=True)
+
+    geom = models.PointField(srid=4326)
+    objects = models.GeoManager()
+
 
     def __unicode__(self):
-        return '{} ({})'.format(self.address, self.year)
-
-    class Meta:
-        abstract = True
-
-
-class EllisAct(BaseEviction):
-    ellis_act_withdrawl = models.CharField(
-        max_length=255, blank=True, null=True)
-
-    neighborhood = models.CharField(
-        max_length=255, blank=True, null=True)
-
-
-class OwnerMoveIn(BaseEviction):
-    did_owner_movein = models.CharField(max_length=255, blank=True, null=True)
-    constraints = models.CharField(max_length=255)
-    constraints_date = models.CharField(max_length=255, blank=True, null=True)
-    supervisor_district = models.IntegerField(blank=True, null=True)
-    neighborhood = models.CharField(max_length=255, blank=True, null=True)
+        return self.address

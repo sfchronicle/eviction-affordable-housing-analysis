@@ -1,52 +1,85 @@
 import os
 
-from postgres_copy import CopyMapping
+import csvkit
+from lib.utils import log
+from dateutil.parser import parse
+from ipdb import set_trace as debugger
 
 from django.conf import settings
 from django.core.management.base import BaseCommand
+from django.contrib.gis.geos import Point
 
-from ellis_act.apps.housing_map.models import EllisAct, OwnerMoveIn
+from ellis_act.apps.housing_map.models import Eviction
 
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
-        help = "Load database with CSV"
-        ellis_act_csv = os.path.join(
-            settings.BASE_DIR, 'data', 'ellis_act_notices_refined.csv')
+        help = "Take model generated with "
+        data = os.path.join(settings.BASE_DIR, 'data','2015-21-09-all-evictions-clean.csv')
 
-        owner_evictions_csv = os.path.join(
-            settings.BASE_DIR, 'data', 'owner_movein_refined.csv')
+        # model attributes
+        datakeys = [
+            'eviction_id', 'address', 'city', 'state', 'zipcode', 'file_date',
+            'new_date', 'year', 'non_payment', 'breach', 'nuisance', 'illegal_use',
+            'failure_to_sign_renewal', 'access_denial', 'unapproved_subtenant',
+            'owner_move_in', 'demolition', 'capital_improvement',
+            'substantial_rehab', 'ellis_act_withdrawal', 'condo_conversion',
+            'roommate_same_unit', 'other_cause', 'late_payments',
+            'lead_remediation', 'development', 'constraints',
+            'constraints_date', 'supervisor_district', 'neighborhood',
+            'latitude', 'longitude'
+        ]
 
-        base_dict = dict(
-            eviction_id='eviction_id',
-            address='address',
-            city='city',
-            state='state',
-            zipcode='zip',
-            file_date='file_date',
-            new_file_date='new_file_date',
-            year='year',
-            client_location='client_location',
-            latitude='lat',
-            longitude='long',
-        )
+        str2bool = lambda x: str(x).lower() in ('TRUE', 'True', 'true')
 
-        ellis_act_dict = base_dict
-        ellis_act_dict['neighborhood'] = 'neighborhood'
-        ellis_act_dict['ellis_act_withdrawl'] = 'ellis_act_withdrawl'
+        with open(data) as csvfile:
+            reader = csvkit.reader(csvfile)
+            headers = reader.next()
+            count = 0
 
-        owner_evictions_dict = base_dict
-        owner_evictions_dict['did_owner_movein'] = 'owner_movein'
-        owner_evictions_dict['constraints'] = 'constraints'
-        owner_evictions_dict['constraints_date'] = 'constraints_date'
-        owner_evictions_dict['supervisor_district'] = 'supervisor_district'
-        owner_evictions_dict['neighborhood'] = 'neighborhood'
+            log('LOADING RECORDS', 'cyan')
 
-        load_ellis_act = CopyMapping(
-            EllisAct, ellis_act_csv, ellis_act_dict)
+            for row in reader:
+                eviction_dict = dict(zip(datakeys, row))
+                try:
+                    reason = [key for key, value in eviction_dict.iteritems() if str2bool(value)][0]
 
-        load_owner_evictions = CopyMapping(
-            OwnerMoveIn, owner_evictions_csv, owner_evictions_dict)
+                except IndexError, e:
+                    pass
 
-        load_ellis_act.save()
-        load_owner_evictions.save()
+                except UnicodeEncodeError, e:
+                    debugger()
+
+                try:
+                    date = parse(eviction_dict['file_date'])
+                except IndexError, e:
+                    pass
+
+                point = Point(
+                    float(eviction_dict['longitude']),
+                    float(eviction_dict['latitude'])
+                )
+
+                model_data = {
+                    'eviction_id': eviction_dict['eviction_id'],
+                    'address': eviction_dict['address'],
+                    'city': eviction_dict['city'],
+                    'state': eviction_dict['state'],
+                    'zipcode': eviction_dict['zipcode'],
+                    'file_date': date,
+                    'new_date': eviction_dict['new_date'],
+                    'year': eviction_dict['year'],
+                    'eviction_reason': reason,
+                    'constraints': eviction_dict['constraints'],
+                    'constraints_date': eviction_dict['constraints_date'],
+                    'supervisor_district': eviction_dict['supervisor_district'],
+                    'neighborhood': eviction_dict['neighborhood'],
+                    'geom': point
+                }
+
+                eviction = Eviction.objects.create(**model_data)
+                count += 1
+
+                log('  created <Eviction {}> [{}]'.format(eviction, count), 'green')
+
+            log('{} eviction records created'.format(count))

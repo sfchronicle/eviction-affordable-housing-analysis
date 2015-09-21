@@ -1,5 +1,4 @@
 from django.contrib import admin
-from .models import EllisAct, OwnerMoveIn
+from .models import Eviction
 
-admin.site.register(EllisAct)
-admin.site.register(OwnerMoveIn)
+admin.site.register(Eviction)
