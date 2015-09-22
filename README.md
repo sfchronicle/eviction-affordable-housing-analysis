@@ -21,11 +21,29 @@ $ fab rs  # start the server and Grunt tasks
 ```
 
 ## data loading
-Export data from Google sheets
+1. Export data from Google sheets as .csv
 - Affordable housing data: https://docs.google.com/a/sfchronicle.com/spreadsheets/d/18uW85ClV5zzbsuRO_9MUGCcKiXrONn_exeyTKnkC4LM/edit?usp=sharing
 - Evictions data: https://docs.google.com/a/sfchronicle.com/spreadsheets/d/132QOVFY75AmwmdSAJuB2UpsfKzmexj42C6Mv3SiL3Ts/edit?usp=sharing
 - San Francisco neighborhoods: https://data.sfgov.org/download/qc6m-r4ih/ZIP
 
+2. create `data` directory for .csv files and a nested `shps` directory for neighborhood shapefiles
+```bash
+ellis_act/ellis_act/data  master ✔                                                                              
+▶ tree .
+.
+├── 2015-21-09-affordable-housing.csv
+├── 2015-21-09-all-evictions-clean.csv
+└── shps
+    ├── sf-neighborhoods.cpg
+    ├── sf-neighborhoods.dbf
+    ├── sf-neighborhoods.prj
+    ├── sf-neighborhoods.qpj
+    ├── sf-neighborhoods.shp
+    ├── sf-neighborhoods.shx
+    └── sf-neighborhoods.zip
+```
+
+3. load the data with management commands
 ```
 $ python manage.py load_neighborhood  # loads neighborhood polygons from SF planning commission
 $ python manage.py loaddataset  # load ellis act evictions data
