@@ -1,6 +1,7 @@
 from django.contrib.gis.db import models
 from django.db.models import Avg, Count, F, Max, Min, Sum, Q
 
+
 class Neighborhood(models.Model):
     neighborhood = models.CharField(
         max_length=25,

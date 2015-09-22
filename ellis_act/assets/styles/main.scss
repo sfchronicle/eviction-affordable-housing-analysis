@@ -1,2 +1,13 @@
 @import '../bower_components/foundation/scss/normalize';
 @import '../bower_components/foundation/scss/foundation';
+
+.inline-list > li {
+  clear: left;
+  width: 100%;
+}
+
+h3 {
+  font-size: 1em;
+  text-transform: uppercase;
+  font-weight: bold;
+}

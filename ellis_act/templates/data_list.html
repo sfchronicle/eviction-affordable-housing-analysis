@@ -2,27 +2,23 @@
 {% load staticfiles %}
 {% load humanize %}
 
+{% block title %}All Neigborhoods{% endblock %}
+
 {% block content %}
 <main class="container">
-    <nav class="top-bar">
-        <ul class="title-area">
-            <li class="name">
-                <h1><a href="">SF Affordable Housing Analysis</a></h1>
-            </li>
-        </ul>
-    </nav>
-
+    {% include '_nav.html' %}
     <section class="row">
-
-    </section>
-
-    <section class="row">
-    <ul class="large-block-grid-3">
+    <ul class="inline-list">
     {% for neighborhood in neighborhoods %}
         <li>
-            <h3>{{ neighborhood }}</h3>
-            <p>Affordable units built: {{ neighborhood.total_affordable_housing_built.sum|intcomma }}</p>
-            <p>Evictions: {{ neighborhood.eviction_set.count|intcomma }}</p>
+            <h3>
+                <a href="{{ neighborhood.get_absolute_url }}">
+                    {{ neighborhood }}
+                </a>
+            </h3>
+            <span><b>Affordable units built</b>: {{ neighborhood.total_affordable_housing_built.sum|intcomma }}</span>
+            <span><b>Evictions</b>: {{ neighborhood.eviction_set.count|intcomma }}</span>
+            <br>
         </li>
     {% endfor %}
     </ul>
