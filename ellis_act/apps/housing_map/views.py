@@ -1,3 +1,13 @@
-from django.shortcuts import render
+from django.db.models import Sum, Count, Prefetch
+from bakery.views import BuildableTemplateView
 
-# Create your views here.
+from ellis_act.apps.housing_map.models import Eviction, AffordableHousing, Neighborhood
+
+class NeighborhoodDataListView(BuildableTemplateView):
+    template_name = 'data_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(NeighborhoodDataListView, self).get_context_data(**kwargs)
+        context['neighborhoods'] = Neighborhood.objects\
+            .prefetch_related('eviction_set', 'affordablehousing_set').all()
+        return context

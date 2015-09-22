@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+<main>
+    <header>
+        <h1>Affordable housing analysis</h1>
+    </header>
+
+    {% for neighborhood in neighborhoods %}
+    <section id="{{neighborhood}}">
+        <h2>{{ neighborhood }}</h2>
+    </section>
+    {% endfor %}
+</main>
+{% endblock %}
+
+{% block javascript %}
+{% endblock %}
