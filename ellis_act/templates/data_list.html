@@ -1,17 +1,32 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
+{% load humanize %}
 
 {% block content %}
-<main>
-    <header>
-        <h1>Affordable housing analysis</h1>
-    </header>
+<main class="container">
+    <nav class="top-bar">
+        <ul class="title-area">
+            <li class="name">
+                <h1><a href="">SF Affordable Housing Analysis</a></h1>
+            </li>
+        </ul>
+    </nav>
 
-    {% for neighborhood in neighborhoods %}
-    <section id="{{neighborhood}}">
-        <h2>{{ neighborhood }}</h2>
+    <section class="row">
+
     </section>
+
+    <section class="row">
+    <ul class="large-block-grid-3">
+    {% for neighborhood in neighborhoods %}
+        <li>
+            <h3>{{ neighborhood }}</h3>
+            <p>Affordable units built: {{ neighborhood.total_affordable_housing_built.sum|intcomma }}</p>
+            <p>Evictions: {{ neighborhood.eviction_set.count|intcomma }}</p>
+        </li>
     {% endfor %}
+    </ul>
+    </section>
 </main>
 {% endblock %}
 

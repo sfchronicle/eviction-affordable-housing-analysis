@@ -1,4 +1,4 @@
-from django.db.models import Sum, Count, Prefetch
+from django.db.models import Sum, Count, Prefetch, Avg
 from bakery.views import BuildableTemplateView
 
 from ellis_act.apps.housing_map.models import Eviction, AffordableHousing, Neighborhood
@@ -9,5 +9,5 @@ class NeighborhoodDataListView(BuildableTemplateView):
     def get_context_data(self, **kwargs):
         context = super(NeighborhoodDataListView, self).get_context_data(**kwargs)
         context['neighborhoods'] = Neighborhood.objects\
-            .prefetch_related('eviction_set', 'affordablehousing_set').all()
+            .prefetch_related('eviction_set', 'affordablehousing_set')
         return context

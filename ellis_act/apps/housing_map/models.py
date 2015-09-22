@@ -1,5 +1,5 @@
 from django.contrib.gis.db import models
-
+from django.db.models import Avg, Count, F, Max, Min, Sum, Q
 
 class Neighborhood(models.Model):
     neighborhood = models.CharField(
@@ -23,6 +23,10 @@ class Neighborhood(models.Model):
         from django.utils.text import slugify
         self.slug = slugify(self.neighborhood)
         super(Neighborhood, self).save(*args, **kwargs) # Call the "real" save() method.
+
+    def _get_total_affordable_housing_built(self):
+        return self.affordablehousing_set.aggregate(sum=Sum('total_project_units'))
+    total_affordable_housing_built = property(_get_total_affordable_housing_built)
 
     def __unicode__(self):
         return self.neighborhood
