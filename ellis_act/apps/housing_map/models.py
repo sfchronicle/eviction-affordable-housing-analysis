@@ -56,16 +56,16 @@ class Eviction(models.Model):
         ('unknown', 'unknown')
     )
 
-    neighborhood =  models.ForeignKey(Neighborhood, null=True)
+    neighborhood =  models.ForeignKey(Neighborhood, null=True, db_index=True)
 
-    eviction_id = models.CharField(max_length=255, null=True)
-    address = models.CharField(max_length=255, blank=True, null=True)
-    city = models.CharField(max_length=255, blank=True, null=True)
-    state = models.CharField(max_length=255, blank=True, null=True)
-    zipcode = models.CharField(max_length=255, )  # zip
-    file_date = models.DateField()
-    new_date = models.CharField(max_length=255, blank=True, null=True)
-    year = models.CharField(max_length=255, blank=True, null=True)
+    eviction_id = models.CharField(max_length=255, null=True, db_index=True)
+    address = models.CharField(max_length=255, blank=True, null=True, db_index=True)
+    city = models.CharField(max_length=255, blank=True, null=True, db_index=True)
+    state = models.CharField(max_length=255, blank=True, null=True, db_index=True)
+    zipcode = models.CharField(max_length=255, db_index=True)  # zip
+    file_date = models.DateField(db_index=True)
+    new_date = models.CharField(max_length=255, blank=True, null=True, db_index=True)
+    year = models.CharField(max_length=255, blank=True, null=True, db_index=True)
 
     eviction_reason = models.CharField(
         max_length=255, choices=EVICTION_REASON_CHOICES)
@@ -73,9 +73,9 @@ class Eviction(models.Model):
     constraints = models.CharField(
         max_length=255, choices=CONSTRAINTS_CHOICES, default='unknown')
 
-    constraints_date = models.CharField(max_length=255, blank=True, null=True)
-    supervisor_district = models.CharField(max_length=2, blank=True, null=True)
-    raw_neighborhood = models.CharField(max_length=255, blank=True, null=True)
+    constraints_date = models.CharField(max_length=255, blank=True, null=True, db_index=True)
+    supervisor_district = models.CharField(max_length=2, blank=True, null=True, db_index=True)
+    raw_neighborhood = models.CharField(max_length=255, blank=True, null=True, db_index=True)
 
     geom = models.PointField(srid=4326)
     objects = models.GeoManager()
@@ -86,50 +86,53 @@ class Eviction(models.Model):
 
 
 class AffordableHousing(models.Model):
-    neighborhood =  models.ForeignKey(Neighborhood, null=True)
-    action_date = models.DateField(help_text='When project was completed')  # actdt
+    neighborhood =  models.ForeignKey(Neighborhood, null=True, db_index=True)
+    action_date = models.DateField(help_text='When project was completed', db_index=True)  # actdt
     year = models.CharField(max_length=4, help_text='Year project was completed')
 
     app_id = models.CharField(
-        max_length=255, blank=True, null=True, help_text='Application number')
+        max_length=255, blank=True, null=True, help_text='Application number', db_index=True)
 
-    address = models.CharField(max_length=255, blank=True, null=True)  # full address
-    zipcode = models.CharField(max_length=255, blank=True, null=True)  # zip
+    address = models.CharField(max_length=255, blank=True, null=True, db_index=True)  # full address
+    zipcode = models.CharField(max_length=255, blank=True, null=True, db_index=True)  # zip
 
-    accuracy_score = models.CharField(max_length=255, blank=True, null=True)
+    accuracy_score = models.CharField(max_length=255, blank=True, null=True, db_index=True)
 
-    description = models.TextField(blank=True, null=True)  # descript
+    description = models.TextField(blank=True, null=True, db_index=True)  # descript
 
-    prop_use = models.CharField(max_length=255, blank=True, null=True)
+    prop_use = models.CharField(max_length=255, blank=True, null=True, db_index=True)
 
-    block = models.CharField(max_length=255, blank=True, null=True)
-    lot = models.CharField(max_length=255, blank=True, null=True)
-    blocklot = models.CharField(max_length=255, blank=True, null=True)
+    block = models.CharField(max_length=255, blank=True, null=True, db_index=True)
+    lot = models.CharField(max_length=255, blank=True, null=True, db_index=True)
+    blocklot = models.CharField(max_length=255, blank=True, null=True, db_index=True)
 
-    units = models.IntegerField(help_text='Gross units')
+    units = models.IntegerField(help_text='Gross units', db_index=True)
 
     netunits = models.CharField(max_length=255,
         help_text='Net Units (so for example, a project \
         with 40 units is built over an existing 10 unit building, \
-        then the net addition to the housing stock is 30 net units)')
+        then the net addition to the housing stock is 30 net units)',
+        db_index=True
+    )
 
     total_project_units = models.IntegerField(
-        help_text='number of affordable housing units in project')  # aff_hsg
+        help_text='number of affordable housing units in project', db_index=True
+    )  # aff_hsg
 
-    fm = models.CharField(max_length=255, blank=True, null=True)
-    ext_use = models.CharField(max_length=255, blank=True, null=True)
-    action = models.CharField(max_length=255, blank=True, null=True)
-    staff = models.CharField(max_length=255, blank=True, null=True)
-    aff_target = models.CharField(max_length=255, blank=True, null=True)
+    fm = models.CharField(max_length=255, blank=True, null=True, db_index=True)
+    ext_use = models.CharField(max_length=255, blank=True, null=True, db_index=True)
+    action = models.CharField(max_length=255, blank=True, null=True, db_index=True)
+    staff = models.CharField(max_length=255, blank=True, null=True, db_index=True)
+    aff_target = models.CharField(max_length=255, blank=True, null=True, db_index=True)
 
-    raw_neighborhood = models.CharField(max_length=255, blank=True, null=True)  # district_1
-    supervisor_district = models.CharField(max_length=2, blank=True, null=True)  # supervis_1
+    raw_neighborhood = models.CharField(max_length=255, blank=True, null=True, db_index=True)  # district_1
+    supervisor_district = models.CharField(max_length=2, blank=True, null=True, db_index=True)  # supervis_1
 
-    yr_qtr = models.CharField(max_length=255, blank=True, null=True)
+    yr_qtr = models.CharField(max_length=255, blank=True, null=True, db_index=True)
 
-    city = models.CharField(max_length=255, blank=True, null=True)
-    state = models.CharField(max_length=255, blank=True, null=True)
-    county = models.CharField(max_length=255, blank=True, null=True)
+    city = models.CharField(max_length=255, blank=True, null=True, db_index=True)
+    state = models.CharField(max_length=255, blank=True, null=True, db_index=True)
+    county = models.CharField(max_length=255, blank=True, null=True, db_index=True)
 
     geom = models.PointField(srid=4326)
     objects = models.GeoManager()
