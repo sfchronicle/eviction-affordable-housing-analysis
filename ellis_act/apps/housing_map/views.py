@@ -5,11 +5,11 @@ from bakery.views import BuildableTemplateView
 
 from ellis_act.apps.housing_map.models import Eviction, AffordableHousing, Neighborhood
 
-class NeighborhoodDataListView(BuildableTemplateView):
-    template_name = 'data_list.html'
+class NeighborhoodListView(BuildableTemplateView):
+    template_name = 'neighborhood_list.html'
 
     def get_context_data(self, **kwargs):
-        context = super(NeighborhoodDataListView, self).get_context_data(**kwargs)
+        context = super(NeighborhoodListView, self).get_context_data(**kwargs)
         context['neighborhoods'] = Neighborhood.objects\
             .prefetch_related(
                 Prefetch(

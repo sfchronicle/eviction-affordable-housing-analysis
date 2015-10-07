@@ -10,7 +10,8 @@ urlpatterns = patterns('',
     (r'^admin/', admin.site.urls),
     url(
         r'^$',
-        views.NeighborhoodDataListView.as_view()
+        views.NeighborhoodListView.as_view(),
+        name='neighborhoods'
     ),
     url(
         r'^(?P<slug>[\w-]+)/$',
