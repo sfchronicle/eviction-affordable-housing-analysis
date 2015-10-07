@@ -6,13 +6,36 @@
 
 {% block content %}
 <main>
+    <div class="filter-controls">
+        <span>Filter by</span>
+        <select name="" id="">
+            <option value="Total Evictions">Total Evictions</option>
+            <option value="Eviction type 1">Eviction type 1</option>
+            <option value="Another evection type">Another evection type</option>
+            <option value="Last eviction type">Last eviction type</option>
+        </select>
+
+        <span>Choose neighborhood</span>
+        <select name="" id="">
+            {% for neighborhood in neighborhoods %}
+            <option value="{{ neighborhood }}">{{ neighborhood }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <article>
     {% for neighborhood in neighborhoods %}
-    <section>
-        <h3>{{ neighborhood }}</h3>
-        <p><b>Affordable units built</b>: {{ neighborhood.total_affordable_housing_built.sum|intcomma }}</p>
-        <p><b>Evictions</b>: {{ neighborhood.eviction_set.count|intcomma }}</p>
-        <hr>
-    </section>
+        <section>
+            <h3>{{ neighborhood }}</h3>
+            <h4>Affordable units built</h4>
+            <p>{{ neighborhood.total_affordable_housing_built.sum|intcomma }}</p>
+            <h4>Evictions</h4>
+            <p>{{ neighborhood.eviction_set.count|intcomma }}</p>
+        </section>
     {% endfor %}
+    </article>
+    <aside>
+        <h5>Methodology</h5>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Distinctio obcaecati quaerat commodi itaque architecto hic optio facilis maiores animi inventore. Necessitatibus sapiente cumque, fugiat sint dolore? Reprehenderit repudiandae, qui totam.</p>
+    </aside>
 </main>
 {% endblock %}

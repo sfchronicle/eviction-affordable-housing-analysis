@@ -1,0 +1,28 @@
+$mobile: 640px;
+
+body {
+  padding: 20px;
+}
+
+main {
+  @include outer-container;
+}
+
+article {
+  @include display(flex);
+  @include flex-wrap(wrap);
+  @include flex-direction(row);
+
+  @include media(max-width $mobile) {
+    @include flex-direction(column);
+  }
+}
+section {
+  @include flex(1);
+  @include flex-grow(1);
+  min-width: 25%;
+  padding: 10px;
+  margin: 10px;
+  border: 1px solid #222;
+  text-align: center;
+}
