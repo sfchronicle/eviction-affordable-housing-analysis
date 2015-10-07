@@ -5,26 +5,14 @@
 {% block title %}All Neigborhoods{% endblock %}
 
 {% block content %}
-<main class="container">
-    {% include '_nav.html' %}
-    <section class="row">
-    <ul class="inline-list">
+<main>
     {% for neighborhood in neighborhoods %}
-        <li>
-            <h3>
-                <a href="{{ neighborhood.get_absolute_url }}">
-                    {{ neighborhood }}
-                </a>
-            </h3>
-            <span><b>Affordable units built</b>: {{ neighborhood.total_affordable_housing_built.sum|intcomma }}</span>
-            <span><b>Evictions</b>: {{ neighborhood.eviction_set.count|intcomma }}</span>
-            <br>
-        </li>
-    {% endfor %}
-    </ul>
+    <section>
+        <h3>{{ neighborhood }}</h3>
+        <p><b>Affordable units built</b>: {{ neighborhood.total_affordable_housing_built.sum|intcomma }}</p>
+        <p><b>Evictions</b>: {{ neighborhood.eviction_set.count|intcomma }}</p>
+        <hr>
     </section>
+    {% endfor %}
 </main>
-{% endblock %}
-
-{% block javascript %}
 {% endblock %}

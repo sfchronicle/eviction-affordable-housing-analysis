@@ -2,9 +2,12 @@
   "name": "ellis-act",
   "private": true,
   "dependencies": {
+    "font-awesome": "~4.4.0",
     "foundation": "~5.5.2",
     "jquery": "~1.11.1",
-    "modernizr": "~2.8.2"
+    "leaflet": "~0.7.5",
+    "modernizr": "~2.8.2",
+    "tangram": "git@github.com:tangrams/tangram.git#~0.3.0"
   },
   "resolutions": {
     "jquery": "~1.11.1"

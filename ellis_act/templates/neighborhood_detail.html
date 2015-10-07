@@ -1,4 +1,6 @@
 {% extends 'base.html' %}
+
+{% load geojson_tags %}
 {% load staticfiles %}
 {% load humanize %}
 
@@ -8,4 +10,68 @@
         <h2>{{ neighborhood }}</h2>
     </section>
 </main>
+{% endblock %}
+
+{% block javascript %}
+<script>
+
+        var neighborhood = {{ neighborhood|geojsonfeature|safe }};
+        var evictions = {{ neighborhood.eviction_set.all|geojsonfeature|safe }};
+        var affordableHousing = {{ neighborhood.affordablehousing_set.all|geojsonfeature|safe }}
+
+        var options = {
+            zoomControl: true
+        };
+        var map = L.map('map', options);
+        var layer = Tangram.leafletLayer({
+            scene: '/static/style.yaml',
+            attribution: '<a href="https://mapzen.com/tangram" target="_blank">Tangram</a> | &copy; OSM contributors | <a href="https://mapzen.com/" target="_blank">Mapzen</a>'
+        });
+        layer.addTo(map);
+        map.setView([37.7683, -122.4437], 13);
+
+        var evictionOptions = {
+            radius: 2,
+            fillColor: "red",
+            color: "#000",
+            weight: 1,
+            opacity: 1,
+            fillOpacity: 0.8
+        };
+
+        var affordableHousingOptions = {
+            radius: 2,
+            fillColor: "blue",
+            color: "#000",
+            weight: 1,
+            opacity: 1,
+            fillOpacity: 0.8
+        };
+
+        var neighborhoodOptions = {
+            "color": "#ff7800",
+            "weight": 5,
+            "opacity": 0.65
+        };
+
+        var neighborhoodLayer = L.geoJson(neighborhood, {
+            style: neighborhoodOptions
+        });
+
+        L.geoJson(evictions, {
+            pointToLayer: function (feature, latlng) {
+                return L.circleMarker(latlng, evictionOptions);
+            }
+        }).addTo(map);
+
+        L.geoJson(affordableHousing, {
+            pointToLayer: function (feature, latlng) {
+                return L.circleMarker(latlng, affordableHousingOptions);
+            }
+        }).addTo(map);
+
+        map.addLayer( neighborhoodLayer )
+           .fitBounds( neighborhoodLayer.getBounds() );
+
+</script>
 {% endblock %}

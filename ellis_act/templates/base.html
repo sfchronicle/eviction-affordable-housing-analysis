@@ -12,9 +12,17 @@
 
     <title>{% block title %}{% endblock %} | SF Housing</title>
     {% block head %}{% endblock %}
+
+    {% if debug %}
+    <link rel="stylesheet" href="{% static 'bower_components/font-awesome/css/font-awesome.css' %}">
+    {% else %}
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    {% endif %}
+
     {% compress css %}
     <!-- bower:css -->
     <!-- endbower -->
+    <link rel="stylesheet" href="{% static "bower_components/leaflet/dist/leaflet.css" %}">
     <link rel="stylesheet" href="{% static "styles/main.css" %}">
     {% endcompress %}
 
@@ -30,12 +38,18 @@
     {% endblock %}
 
     {% compress js %}
-    <!-- bower:js -->
-    <!-- endbower -->
+    <script src="{% static "bower_components/jquery/dist/jquery.js" %}"></script>
+    <script src="{% static "bower_components/leaflet/dist/leaflet.js" %}"></script>
+    <script src="{% static "bower_components/tangram/dist/tangram.debug.js" %}"></script>
     <script src="{% static "scripts/main.js" %}"></script>
     {% endcompress %}
 
+    {% block javascript %}
+    {% endblock %}
+
+    {% if debug != None %}
     <script type="text/javascript" async src="//platform.twitter.com/widgets.js"></script>
+    {% endif %}
 
     {% if debug %}
     <!-- livereload -->

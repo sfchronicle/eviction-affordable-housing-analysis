@@ -1,3 +1,5 @@
+from datetime import date
+
 from django.db.models import Sum, Count, Prefetch, Avg
 from bakery.views import BuildableTemplateView
 
@@ -9,8 +11,15 @@ class NeighborhoodDataListView(BuildableTemplateView):
     def get_context_data(self, **kwargs):
         context = super(NeighborhoodDataListView, self).get_context_data(**kwargs)
         context['neighborhoods'] = Neighborhood.objects\
-            .prefetch_related('eviction_set', 'affordablehousing_set')
+            .prefetch_related(
+                Prefetch(
+                    'eviction_set',
+                    queryset=Eviction.objects.filter(file_date__gte=date(2005, 1, 1))
+                ),
+                'affordablehousing_set'
+            ).all()
         return context
+
 
 class NeighborhoodDetailView(BuildableTemplateView):
     template_name = 'neighborhood_detail.html'
@@ -18,6 +27,11 @@ class NeighborhoodDetailView(BuildableTemplateView):
     def get_context_data(self, **kwargs):
         context = super(NeighborhoodDetailView, self).get_context_data(**kwargs)
         context['neighborhood'] = Neighborhood.objects\
-            .prefetch_related('eviction_set', 'affordablehousing_set')\
-            .get(**kwargs)
+            .prefetch_related(
+                Prefetch(
+                    'eviction_set',
+                    queryset=Eviction.objects.filter(file_date__gte=date(2005, 1, 1))
+                ),
+                'affordablehousing_set'
+            ).get(**kwargs)
         return context

@@ -65,6 +65,7 @@ INSTALLED_APPS = (
     'bakery',
     'django_extensions',
     'debug_toolbar',
+    'djgeojson',
 
     # Project Apps
     'lib',
