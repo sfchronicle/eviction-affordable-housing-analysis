@@ -16,13 +16,14 @@ article {
   @include media(max-width $mobile) {
     @include flex-direction(column);
   }
-}
-section {
-  @include flex(1);
-  @include flex-grow(1);
-  min-width: 25%;
-  padding: 10px;
-  margin: 10px;
-  border: 1px solid #222;
-  text-align: center;
+  
+  section {
+    @include flex(1);
+    @include flex-grow(1);
+    min-width: 25%;
+    padding: 10px;
+    margin: 10px;
+    border: 1px solid #222;
+    text-align: center;
+  }
 }

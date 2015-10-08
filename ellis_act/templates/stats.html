@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load humanize %}
+
+{% block title %}Statistics | All Neigborhoods{% endblock %}
+
+{% block content %}
+<main>
+    <section>
+        <h1>Statistics</h1>
+
+        <h2>Total evictions [Since 2005]</h2>
+        <p>{{ total_evictions|intcomma }} evictions</p>
+        <hr>
+
+        <h2>Total evictions by reason [Since 2005]</h2>
+        <ol>
+            {% for e in total_evictions_by_reason %}
+            <li><b>{{ e.eviction_reason }}</b>: {{ e.pk__count|intcomma }}</li>
+            {% endfor %}
+        </ol>
+        <hr>
+
+        <h2>Total Evictions by year</h2>
+        <ul>
+            {% for e in evictions_by_year %}
+            <li><b>{{ e.year.year }}</b>: {{ e.pk__count|intcomma }}</li>
+            {% endfor %}
+        </ul>
+
+        <h2>Total evictions by neighborhood (most to least) [Since 2005]</h2>
+        <ol>
+            {% for neighborhood in neighborhoods %}
+            <li><b>{{ neighborhood }}:</b> {{ neighborhood.num_evictions|intcomma }} evictions</li>
+            {% endfor %}
+        </ol>
+        <hr>
+    </section>
+</main>
+{% endblock %}

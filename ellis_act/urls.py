@@ -14,8 +14,13 @@ urlpatterns = patterns('',
         name='neighborhoods'
     ),
     url(
-        r'^(?P<slug>[\w-]+)/$',
+        r'^neighborhood/(?P<slug>[\w-]+)/$',
         views.NeighborhoodDetailView.as_view(),
         name='neighborhood'
+    ),
+    url(
+        r'^stats/$',
+        views.NeighborhoodStatView.as_view(),
+        name='stats'
     ),
 )

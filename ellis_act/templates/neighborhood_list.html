@@ -25,7 +25,9 @@
     <article>
     {% for neighborhood in neighborhoods %}
         <section>
-            <h3>{{ neighborhood }}</h3>
+            <h3>
+                <a href="{{ neighborhood.get_absolute_url }}">{{ neighborhood }}</a>
+            </h3>
             <h4>Affordable units built</h4>
             <p>{{ neighborhood.total_affordable_housing_built.sum|intcomma }}</p>
             <h4>Evictions</h4>
