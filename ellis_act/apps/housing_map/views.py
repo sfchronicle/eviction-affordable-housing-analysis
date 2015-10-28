@@ -64,7 +64,7 @@ class NeighborhoodStatView(BuildableTemplateView):
         TOTAL EVICTIONS
         """
         context['total_evictions'] = Eviction\
-            .objects.filter(file_date__gte=date(2005, 1, 1)).count()
+            .objects.filter(file_date__gte=date(2005, 1, 1), neighborhood__isnull=False).count()
 
         """
         Total Evictions by reason

@@ -42,12 +42,12 @@ class Eviction(models.Model):
         ('failure_to_sign_renewal', 'failure_to_sign_renewal'),
         ('access_denial', 'access_denial'),
         ('unapproved_subtenant', 'unapproved_subtenant'),
-        ('owner_move_in', 'owner_move_in'),
-        ('demolition', 'demolition'),
+        ('owner_move_in', 'owner_move_in'),  # NO FAULT
+        ('demolition', 'demolition'),  # NO FAULT
         ('capital_improvement', 'capital_improvement'),
         ('substantial_rehab', 'substantial_rehab'),
-        ('ellis_act_withdrawal', 'ellis_act_withdrawal'),
-        ('condo_conversion', 'condo_conversion'),
+        ('ellis_act_withdrawal', 'ellis_act_withdrawal'),  # NO FAULT
+        ('condo_conversion', 'condo_conversion'),  # NO FAULT
         ('roommate_same_unit', 'roommate_same_unit'),
         ('other_cause', 'other_cause'),
         ('late_payments', 'late_payments'),
