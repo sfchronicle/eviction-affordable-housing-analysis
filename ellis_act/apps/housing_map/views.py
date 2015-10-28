@@ -15,7 +15,8 @@ class NeighborhoodListView(BuildableTemplateView):
             .prefetch_related(
                 Prefetch(
                     'eviction_set',
-                    queryset=Eviction.objects.filter(file_date__gte=date(2005, 1, 1))
+                    queryset=Eviction.objects.filter(file_date__gte=date(2005, 1, 1))\
+                    .exclude(eviction_reason=['lead_remediation', 'capital_improvement'])
                 ),
                 'affordablehousing_set'
             ).all()

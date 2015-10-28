@@ -1,3 +1,5 @@
+from datetime import date
+
 from django.contrib.gis.db import models
 from django.db.models import Avg, Count, F, Max, Min, Sum, Q
 
@@ -28,6 +30,13 @@ class Neighborhood(models.Model):
     def _get_total_affordable_housing_built(self):
         return self.affordablehousing_set.aggregate(sum=Sum('total_project_units'))
     total_affordable_housing_built = property(_get_total_affordable_housing_built)
+
+    def _get_no_fault_evictions(self):
+        return self.eviction_set.filter(file_date__gte=date(2005, 1, 1))\
+            .exclude(eviction_reason=['lead_remediation', 'capital_improvement'])\
+            .filter(Q(eviction_reason='owner_move_in') | Q(eviction_reason='demolition') | Q(eviction_reason='ellis_act_withdrawal') | Q(eviction_reason='condo_conversion') | Q(eviction_reason='development')
+        )
+    no_fault_evictions = property(_get_no_fault_evictions)
 
     def __unicode__(self):
         return self.neighborhood

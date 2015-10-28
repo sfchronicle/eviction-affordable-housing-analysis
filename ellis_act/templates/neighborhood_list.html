@@ -32,6 +32,8 @@
             <p>{{ neighborhood.total_affordable_housing_built.sum|intcomma }}</p>
             <h4>Evictions</h4>
             <p>{{ neighborhood.eviction_set.count|intcomma }}</p>
+            <h4>No fault</h4>
+            <p>{{ neighborhood.no_fault_evictions.count|intcomma }}</p>
         </section>
     {% endfor %}
     </article>
