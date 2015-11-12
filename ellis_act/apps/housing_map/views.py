@@ -19,7 +19,7 @@ class NeighborhoodListView(BuildableTemplateView):
                     .exclude(eviction_reason=['lead_remediation', 'capital_improvement'])
                 ),
                 'affordablehousing_set'
-            ).all()
+            ).exclude(neighborhood='Golden Gate Park')
         return context
 
 
